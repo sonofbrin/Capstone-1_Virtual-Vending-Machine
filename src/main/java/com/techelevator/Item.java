@@ -11,6 +11,12 @@ public abstract class Item {
         this.quantity = quantity;
     }
 
+    public abstract String dispenseMessage();
+
+    public int reduceQuantity() {
+        return --quantity;
+    }
+
     public double getPrice() {
         return price;
     }

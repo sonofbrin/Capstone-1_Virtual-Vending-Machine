@@ -2,8 +2,7 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -37,23 +36,38 @@ public class VendingMachineCLI {
 
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
-				System.out.println(vm.displayOptions());
+				System.out.println(vm.getDisplayOptions());
 
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				// Purchase menu
 				boolean purchasing = true;
 				Scanner input = new Scanner(System.in);
 				while (purchasing) {
-					System.out.println("Current Money Provided: $" + vm.getUserBalance());
+					System.out.println("\nCurrent Money Provided: $" + vm.getUserBalance());
 					choice = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
 
 					if (choice.equals(PURCHASE_MENU_OPTION_FEED_MONEY)) {
 						System.out.println("Please feed a bill in the amount of $1, $2, $5, or $10:");
 						vm.feedMoney(input.nextLine());
 					} else if (choice.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
-
+						System.out.println(vm.getDisplayOptions());
+						System.out.println("\nEntire slot ID for desired item: ");
+						String slot = input.nextLine().toUpperCase();
+						Item desiredItem = vm.getItemFromSlotID(slot);
+						if (desiredItem != null) {
+							// dispense
+							if (desiredItem.getPrice() > vm.getUserBalance()) {
+								System.out.println("Not enough funds provided.");
+							} else if (desiredItem.getQuantity() > 0) {
+								vm.dispenseItem(slot);
+							} else {
+								System.out.println("Product is out of stock.");
+							}
+						} else {
+							System.out.println("No slot with the given ID.");
+						}
 					} else if (choice.equals(PURCHASE_MENU_OPTION_FINISH_TRANSACTION)) {
-
+						vm.dispenseChange();
 						purchasing = false;
 					}
 				}
