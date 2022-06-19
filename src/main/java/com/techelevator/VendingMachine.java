@@ -1,27 +1,30 @@
 package com.techelevator;
 
+import com.techelevator.items.Candy;
+import com.techelevator.items.Chip;
+import com.techelevator.items.Drink;
+import com.techelevator.items.Gum;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class VendingMachine {
-    private Map<String, Item> inventory = new HashMap<>();
-    private static final int MAX_STOCK_COUNT = 5;
+    private TreeMap<String, Item> inventory = new TreeMap<>();
+    public static final int MAX_STOCK_COUNT = 5;
     private double userBalance = 0;
     private BalanceLog logger = new BalanceLog();
 
-    public VendingMachine() {
-        initializeInventory();
+    public VendingMachine(String filename) {
+        initializeInventory(filename);
     }
 
     public String getDisplayOptions() {
         String options = "";
         for (String s : inventory.keySet()) {
             Item i = inventory.get(s);
-            options += s + " " + i.getName() + ": $" + i.getPrice() + " Qty: "
-                    + (i.getQuantity() == 0 ? "SOLD OUT" : i.getQuantity()) + "\n";
+            options += String.format("[%s] %s\n", s, i.toString());
         }
         return options;
     }
@@ -31,7 +34,7 @@ public class VendingMachine {
             double money = Double.parseDouble(moneyFed);
             if (money == 1 || money == 2 || money == 5 || money == 10) {
                 userBalance += money;
-                logger.log("FEED MONEY: $" + money + " $" + userBalance);
+                logger.log(String.format("FEED MONEY: $%.2f $%.2f", money, userBalance));
             } else {
                 throw new NumberFormatException();
             }
@@ -44,26 +47,21 @@ public class VendingMachine {
 
     public Item getItemFromSlotID(String slotID) {
         Item item = inventory.get(slotID);
-//        if (item == null) {
-//            System.out.println("No slot with the given ID.");
-//        }
         return item;
     }
 
     public void dispenseItem(String slot) {
         Item item = inventory.get(slot);
         // Dispensing an item prints the money remaining.
-        System.out.println(item.getName() + " $" + item.getPrice());
+        System.out.printf("%s $%.2f\n", item.getName(), item.getPrice());
         System.out.println(item.dispenseMessage());
 
-        logger.log(item.getName() + " " + slot + " $" + userBalance + " $" +
-                (userBalance -= item.getPrice()));
+        logger.log(String.format("%s %s $%.2f $%.2f", item.getName(), slot, userBalance, userBalance -= item.getPrice()));
         item.reduceQuantity();
     }
 
     public void dispenseChange() {
-        // GIVE CHANGE: $7.50 $0.00
-        logger.log("GIVE CHANGE: $" + userBalance + " $0.00");
+        logger.log(String.format("GIVE CHANGE: $%.2f $0.00", userBalance));
         System.out.println("Change returned:");
         int balanceRemaining = (int)Math.round(userBalance * 100);
 
@@ -80,8 +78,8 @@ public class VendingMachine {
         userBalance = 0;
     }
 
-    public void initializeInventory() {
-        File inventoryFile = new File("vendingmachine.csv");
+    public void initializeInventory(String filename) {
+        File inventoryFile = new File(filename);
         try (Scanner scanInventory = new Scanner(inventoryFile)) {
             while (scanInventory.hasNextLine()) {
                 String[] elements = scanInventory.nextLine().split("\\|");

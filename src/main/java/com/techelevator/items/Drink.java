@@ -1,4 +1,6 @@
-package com.techelevator;
+package com.techelevator.items;
+
+import com.techelevator.Item;
 
 public class Drink extends Item {
     private final String DISPENSE_MESSAGE = "Glug Glug, Yum!";

@@ -1,8 +1,6 @@
 package com.techelevator;
 
 import com.techelevator.view.Menu;
-
-import java.util.Locale;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -37,13 +35,12 @@ public class VendingMachineCLI {
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
 				System.out.println(vm.getDisplayOptions());
-
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				// Purchase menu
 				boolean purchasing = true;
 				Scanner input = new Scanner(System.in);
 				while (purchasing) {
-					System.out.println("\nCurrent Money Provided: $" + vm.getUserBalance());
+					System.out.printf("\nCurrent Money Provided: $%.2f\n", vm.getUserBalance());
 					choice = (String) menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
 
 					if (choice.equals(PURCHASE_MENU_OPTION_FEED_MONEY)) {
@@ -51,11 +48,10 @@ public class VendingMachineCLI {
 						vm.feedMoney(input.nextLine());
 					} else if (choice.equals(PURCHASE_MENU_OPTION_SELECT_PRODUCT)) {
 						System.out.println(vm.getDisplayOptions());
-						System.out.println("\nEntire slot ID for desired item: ");
+						System.out.println("Enter slot ID for desired item: ");
 						String slot = input.nextLine().toUpperCase();
 						Item desiredItem = vm.getItemFromSlotID(slot);
 						if (desiredItem != null) {
-							// dispense
 							if (desiredItem.getPrice() > vm.getUserBalance()) {
 								System.out.println("Not enough funds provided.");
 							} else if (desiredItem.getQuantity() > 0) {
@@ -79,7 +75,7 @@ public class VendingMachineCLI {
 
 	public static void main(String[] args) {
 		Menu menu = new Menu(System.in, System.out);
-		VendingMachine vm = new VendingMachine();
+		VendingMachine vm = new VendingMachine("vendingmachine.csv");
 		VendingMachineCLI cli = new VendingMachineCLI(menu, vm);
 
 		cli.run();

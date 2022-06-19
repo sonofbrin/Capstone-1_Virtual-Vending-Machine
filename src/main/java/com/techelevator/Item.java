@@ -28,4 +28,8 @@ public abstract class Item {
     public int getQuantity() {
         return quantity;
     }
+
+    public String toString() {
+        return String.format("%-19s  $%5.2f  Qty: %s", name, price, (quantity == 0 ? "SOLD OUT" : quantity));
+    }
 }

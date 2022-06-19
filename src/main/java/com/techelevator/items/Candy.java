@@ -1,4 +1,6 @@
-package com.techelevator;
+package com.techelevator.items;
+
+import com.techelevator.Item;
 
 public class Candy extends Item {
     private final String DISPENSE_MESSAGE = "Munch Munch, Yum!";
