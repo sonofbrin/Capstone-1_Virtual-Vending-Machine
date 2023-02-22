@@ -2,7 +2,7 @@
 
 The Vendo-Matic 800 is a virtual vending machine application with command-line interface that allows users to deposit money, select one or more products, and receive the correct change upon transaction completion. The machine's inventory is loaded via a text file and all transactions are logged to a separate output file.
 
-![](https://raw.githubusercontent.com/cfpb/open-source-project-template/main/screenshot.png)
+![](https://raw.githubusercontent.com/sonofbrin/Capstone-1_Virtual-Vending-Machine/main/Screenshot.png)
 
 ## Usage
 
